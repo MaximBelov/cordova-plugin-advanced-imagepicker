@@ -53,7 +53,7 @@
         photoHeight = 0;
     }
     
-    dmc.modalPresentationStyle = 0;
+    dmc.modalPresentationStyle = UIModalPresentationPopover;
     if (@available(iOS 13.0, *)) {
         dmc.modalInPresentation = true;
     }
@@ -155,9 +155,37 @@
         UIGraphicsEndImageContext();
         
     }
-    imageData = UIImageJPEGRepresentation(image, 0.8f);
+    return UIImageJPEGRepresentation(image, 0.8f);
+}
+
+-(void)imageToSandboxProcess:(PHAsset*)asset
+                    imageData:(NSData *_Nullable)imageData
+                    dmcPickerPath: (NSString*)dmcPickerPath
+                    aListArray:(NSMutableArray*)aListArray
+                    index:(int)index
+{
+
+    NSString *filename=[asset valueForKey:@"filename"];
+
+    NSData * processedImageData = [self processImage:imageData];
     
-    return imageData;
+    if( processedImageData == nil ) {
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error with image data."] callbackId:self->callbackId];
+        return;
+    }
+    
+    NSString *fullpath=[NSString stringWithFormat:@"%@/%@%@.jpg", dmcPickerPath,[[NSProcessInfo processInfo] globallyUniqueString], filename];
+    NSNumber *size=[NSNumber numberWithLong:processedImageData.length];
+    
+    NSError *error = nil;
+    if (![processedImageData writeToFile:fullpath options:NSAtomicWrite error:&error]) {
+        NSLog(@"%@", [error localizedDescription]);
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]] callbackId:self->callbackId];
+    } else {
+        
+        NSDictionary *dict=[NSDictionary dictionaryWithObjectsAndKeys:fullpath,@"path",[[NSURL fileURLWithPath:fullpath] absoluteString],@"src",@"image",@"mediaType",size,@"size",[NSNumber numberWithInt:index],@"index", nil];
+        [aListArray addObject:dict];
+    }
 }
 
 -(void)imageToSandbox:(PHAsset *)asset dmcPickerPath:(NSString*)dmcPickerPath aListArray:(NSMutableArray*)aListArray index:(int)index{
@@ -177,24 +205,10 @@
          requestImageDataAndOrientationForAsset:asset
          options:options
          resultHandler:^(NSData *_Nullable imageData, NSString *_Nullable dataUTI, CGImagePropertyOrientation orientation, NSDictionary *_Nullable info) {
+            BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
+            
             if(imageData != nil) {
-                NSString *filename=[asset valueForKey:@"filename"];
-                
-                
-                imageData = [self processImage:imageData];
-                
-                NSString *fullpath=[NSString stringWithFormat:@"%@/%@%@.jpg", dmcPickerPath,[[NSProcessInfo processInfo] globallyUniqueString], filename];
-                NSNumber *size=[NSNumber numberWithLong:imageData.length];
-                
-                NSError *error = nil;
-                if (![imageData writeToFile:fullpath options:NSAtomicWrite error:&error]) {
-                    NSLog(@"%@", [error localizedDescription]);
-                    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]] callbackId:self->callbackId];
-                } else {
-                    
-                    NSDictionary *dict=[NSDictionary dictionaryWithObjectsAndKeys:fullpath,@"path",[[NSURL fileURLWithPath:fullpath] absoluteString],@"src",@"image",@"mediaType",size,@"size",[NSNumber numberWithInt:index],@"index", nil];
-                    [aListArray addObject:dict];
-                }
+                [self imageToSandboxProcess:asset imageData:imageData dmcPickerPath:dmcPickerPath aListArray:aListArray index:index];
             } else {
                 [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:NSLocalizedString(@"photo_download_failed", nil)] callbackId:self->callbackId];
             }
@@ -205,23 +219,7 @@
             options:options
             resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
             if(imageData != nil) {
-                NSString *filename=[asset valueForKey:@"filename"];
-                
-                
-                imageData = [self processImage:imageData];
-
-                NSString *fullpath=[NSString stringWithFormat:@"%@/%@%@.jpg", dmcPickerPath,[[NSProcessInfo processInfo] globallyUniqueString], filename];
-                NSNumber *size=[NSNumber numberWithLong:imageData.length];
-
-                NSError *error = nil;
-                if (![imageData writeToFile:fullpath options:NSAtomicWrite error:&error]) {
-                    NSLog(@"%@", [error localizedDescription]);
-                    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]] callbackId:self->callbackId];
-                } else {
-                    
-                    NSDictionary *dict=[NSDictionary dictionaryWithObjectsAndKeys:fullpath,@"path",[[NSURL fileURLWithPath:fullpath] absoluteString],@"src",@"image",@"mediaType",size,@"size",[NSNumber numberWithInt:index],@"index", nil];
-                    [aListArray addObject:dict];
-                }
+                [self imageToSandboxProcess:asset imageData:imageData dmcPickerPath:dmcPickerPath aListArray:aListArray index:index];
             } else {
                 [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:NSLocalizedString(@"photo_download_failed", nil)] callbackId:self->callbackId];
             }
