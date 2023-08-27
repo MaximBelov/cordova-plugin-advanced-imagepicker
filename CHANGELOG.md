@@ -1,21 +1,41 @@
-### [1.5.7](https://github.com/dimitriadamou/cordova-plugin-advanced-imagepicker/compare/V1.5.6...V1.5.7) (2021-10-18)
+### [1.6.2](https://github.com/EinfachHans/cordova-plugin-advanced-imagepicker/compare/V1.6.1...V1.6.2) (2022-08-16)
 
-### Changes
 
-- Drop YPImagePicker in favour of dmcSDK for iOS https://github.com/DmcSDK/cordova-plugin-mediaPicker
-### [1.5.6](https://github.com/dimitriadamou/cordova-plugin-advanced-imagepicker/compare/V1.5.5...V1.5.6) (2021-10-18)
+### Bug Fixes
 
-#### Changes
+* commit `plugin.xml` automatically ([ad0186a](https://github.com/EinfachHans/cordova-plugin-advanced-imagepicker/commit/ad0186afb6f9d62d98656b12c527910efe1c2790))
 
-- Plugin sends a 'processing' string before the actual results, this is to provide feed back that there is work being done in the background.
-### [1.5.5](https://github.com/dimitriadamou/cordova-plugin-advanced-imagepicker/compare/V1.5.4...V1.5.5) (2021-10-18)
+### [1.6.1](https://github.com/EinfachHans/cordova-plugin-advanced-imagepicker/compare/V1.6.0...V1.6.1) (2022-08-16)
 
-#### Changes
 
-- Photos selected from gallery are processed in a background thread.
-- Photos will now resize.
-- Android; ted:tedimagepicker has been updated to 1.2.7
-- iOS; YPImagePicker has been updated to 5.0.0
+### Code Refactoring
+
+* correctly set plugin version in `plugin.xml` ([397b515](https://github.com/EinfachHans/cordova-plugin-advanced-imagepicker/commit/397b515280d4bf90a053e892ec41eaa3c292ee74))
+
+## [1.6.0](https://github.com/EinfachHans/cordova-plugin-advanced-imagepicker/compare/V1.5.5...V1.6.0) (2022-08-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ios:** you have to manually set `NSCameraUsageDescription`, `NSPhotoLibraryUsageDescription` and `NSMicrophoneUsageDescription` now
+
+### Features
+
+* **android:** Support PickerCanceled error ([#43](https://github.com/EinfachHans/cordova-plugin-advanced-imagepicker/issues/43)) ([f57f470](https://github.com/EinfachHans/cordova-plugin-advanced-imagepicker/commit/f57f47061c92edfd94ec37cbcb9300c941e55690))
+* **ios:** update library version ([ca3a33e](https://github.com/EinfachHans/cordova-plugin-advanced-imagepicker/commit/ca3a33e88e43d249b6aea57aef24136850f80415))
+
+
+### Code Refactoring
+
+* **ios:** remove hardcoded plist permission strings ([12425c7](https://github.com/EinfachHans/cordova-plugin-advanced-imagepicker/commit/12425c74597e1b7d0a359c4c01d8942ba0f898fa))
+
+### [1.5.5](https://github.com/EinfachHans/cordova-plugin-advanced-imagepicker/compare/V1.5.4...V1.5.5) (2022-01-07)
+
+
+### Bug Fixes
+
+* **android:** don't wrap base64 output ([#33](https://github.com/EinfachHans/cordova-plugin-advanced-imagepicker/issues/33)) ([b03620b](https://github.com/EinfachHans/cordova-plugin-advanced-imagepicker/commit/b03620b429551c68c939ef484e692a665f3b29ca))
+
 ### [1.5.4](https://github.com/EinfachHans/cordova-plugin-advanced-imagepicker/compare/V1.5.3...V1.5.4) (2021-10-18)
 
 

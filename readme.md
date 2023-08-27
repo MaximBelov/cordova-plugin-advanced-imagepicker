@@ -1,5 +1,5 @@
 # Advanced ImagePicker Cordova Plugin
-![Maintenance](https://img.shields.io/maintenance/yes/2021)
+![Maintenance](https://img.shields.io/maintenance/yes/2022)
 [![npm version](https://badge.fury.io/js/cordova-plugin-advanced-imagepicker.svg)](https://badge.fury.io/js/cordova-plugin-advanced-imagepicker)
 
 This [Cordova](https://cordova.apache.org) Plugin is for a better (multiple) ImagePicker with more options.
@@ -66,7 +66,7 @@ I developed it, testing with **cordova-ios@6.1.0**.
 
 ## Android
 
-- ANDROID_IMAGE_PICKER_VERSION - Version of `gun0912.ted:tedimagepicker` / default to `1.2.7` 
+- ANDROID_IMAGE_PICKER_VERSION - Version of `gun0912.ted:tedimagepicker` / default to `1.3.2` 
 
 ## iOS
 
@@ -182,7 +182,6 @@ window.AdvancedImagePicker.cleanup(function() {
 ## Android
 
 - Currently, the Android Library is not able to select Images and Videos at the same Time. See reported Issue [here](https://github.com/ParkSangGwon/TedImagePicker/issues/40).
-- The `PickerCanceled` ErrorCode is currently not supported in Android
 
 # Changelog
 
