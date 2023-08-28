@@ -292,14 +292,27 @@ public class AdvancedImagePicker extends CordovaPlugin {
         if(file.exists()) file.delete();
 
         FileOutputStream outStream = new FileOutputStream(file);
+        boolean compressResult = false;
         if (asJpeg) {
-            selectedImage.compress(Bitmap.CompressFormat.JPEG, 80, outStream);
+            compressResult = selectedImage.compress(Bitmap.CompressFormat.JPEG, 80, outStream);
         } else {
-            selectedImage.compress(Bitmap.CompressFormat.PNG, 80, outStream);
+            compressResult = selectedImage.compress(Bitmap.CompressFormat.PNG, 80, outStream);
         }
 
         outStream.flush();
         outStream.close();
+
+        if(!compressResult) {
+            throw new IOException(
+                "Image compression failed. Please try again."
+            );
+        }
+
+        if(file.length() == 0) {
+            throw new IOException(
+                "Image size is 0 bytes. Please try again."
+            );
+        }
 
         return Uri.fromFile(file).toString();
     }
