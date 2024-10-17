@@ -9,6 +9,7 @@
 #define fDeviceHeight ([UIScreen mainScreen].bounds.size.height)
 @interface DmcPickerViewController (){
      UIBarButtonItem *preview;
+     UIBarButtonItem *annotate;
      int litemCount;
      UICollectionViewFlowLayout *flowLayout ;
      UILabel * titleNameLabel;
@@ -51,7 +52,10 @@
     //bottom bar
     [self.navigationController  setToolbarHidden:NO animated:YES];
     preview = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Preview",nil) style:UIBarButtonItemStylePlain target:self action:@selector(preview)];
-    [self setToolbarItems:@[preview] animated:YES];
+    
+    annotate = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Annotate", nil) style:UIBarButtonItemStylePlain target:self action:@selector(annotate) ];
+    
+    [self setToolbarItems:@[preview, annotate] animated:YES];
     [self setBtnStatus];
     [self.view addSubview:self.collectionView];
 }
@@ -139,6 +143,11 @@
     [self.navigationController  setToolbarHidden:NO  animated:YES];
 }
 
+//fill out the functionality.
+-(void) annotate{
+    selectAnnotate = YES;
+    [self done];
+}
     
 -(void) preview{
     PreviewViewController * dmc=[[PreviewViewController alloc] init];
@@ -148,13 +157,13 @@
 }
     
 -(void) done{
-    [self._delegate resultPicker:selectArray];
+    [self._delegate resultPicker:selectArray annotate:selectAnnotate];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
     
 -(void) cancel{
     NSMutableArray *nilArray=[[NSMutableArray alloc] init];
-    [self._delegate resultPicker:nilArray];
+    [self._delegate resultPicker:nilArray annotate:NO];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
     
@@ -185,6 +194,7 @@
 -(void) getAlassetData{
     
     selectArray=[[NSMutableArray alloc] init];
+    selectAnnotate = NO;
     albumsTitlelist=[[NSMutableArray alloc] init];
     dataSource=[[NSMutableArray alloc] init];
    
@@ -425,13 +435,14 @@
 -(void) previewResultPicker:(NSMutableArray*) srray
 {
     selectArray=srray;
+    selectAnnotate = annotate;
     [self setBtnStatus];
     [_collectionView reloadData];
 }
 
 -(void) previewDonePicker:(NSMutableArray*) srray
 {
-    [self._delegate resultPicker:srray];
+    [self._delegate resultPicker:srray annotate:selectAnnotate];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

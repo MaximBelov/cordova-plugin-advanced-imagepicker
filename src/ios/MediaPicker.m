@@ -61,7 +61,7 @@
     [self.viewController presentViewController:[[UINavigationController alloc]initWithRootViewController:dmc] animated:YES completion:nil];
 }
 
--(void) resultPicker:(NSMutableArray*) selectArray
+-(void) resultPicker:(NSMutableArray*) selectArray annotate:(BOOL)annotate
 {
     
     [self.commandDelegate runInBackground:^{
