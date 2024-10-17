@@ -43,19 +43,18 @@
     self.view.backgroundColor=[UIColor whiteColor];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done",nil) style:UIBarButtonItemStylePlain target:self action:@selector(done)];
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel",nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel)];
-    self.navigationItem.rightBarButtonItem = rightButtonItem;
+    annotate = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Mark Up", nil) style:UIBarButtonItemStylePlain target:self action:@selector(annotate) ];
+    self.navigationItem.rightBarButtonItems = @[rightButtonItem, annotate];
     self.navigationItem.leftBarButtonItem=leftButtonItem;
-    
-    
+
     //[self setTitleView:self.selectMode==102?NSLocalizedString(@"Video",nil):NSLocalizedString(@"All",nil)];
     
     //bottom bar
     [self.navigationController  setToolbarHidden:NO animated:YES];
     preview = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Preview",nil) style:UIBarButtonItemStylePlain target:self action:@selector(preview)];
     
-    annotate = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Mark Up", nil) style:UIBarButtonItemStylePlain target:self action:@selector(annotate) ];
     
-    [self setToolbarItems:@[preview, annotate] animated:YES];
+    [self setToolbarItems:@[preview] animated:YES];
     [self setBtnStatus];
     [self.view addSubview:self.collectionView];
 }
@@ -414,10 +413,8 @@
         preview.enabled= YES;
         annotate.enabled = YES;
         preview.title= [NSLocalizedString(@"Preview",nil)stringByAppendingString:[NSString stringWithFormat:@"(%lu)",(unsigned long)[selectArray count]]];
-        annotate.title= [NSLocalizedString(@"Mark Up",nil)stringByAppendingString:[NSString stringWithFormat:@"(%lu)",(unsigned long)[selectArray count]]];
     }else{
         self.navigationItem.rightBarButtonItem.enabled= NO;
-        annotate.title= NSLocalizedString(@"Mark Up",nil);
         preview.title= NSLocalizedString(@"Preview",nil);
         preview.enabled= NO;
         annotate.enabled = NO;
