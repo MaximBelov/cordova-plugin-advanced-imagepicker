@@ -72,6 +72,9 @@
             [fileManager createDirectoryAtPath:dmcPickerPath withIntermediateDirectories:YES attributes:nil error:nil];
         }
         
+        NSMutableDictionary *options = [NSMutableDictionary dictionaryWithCapacity:5];
+        
+        [options setObject:[NSNumber numberWithBool: annotate] forKey:@"annotate"];
         if([selectArray count]<=0){
             [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:[[NSMutableArray alloc] init]] callbackId:self->callbackId];
             return;
@@ -96,7 +99,9 @@
                 }
                 index++;
                 
-                [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:aListArray] callbackId:self->callbackId];
+                [options setObject:aListArray forKey:@"list"];
+                
+                [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:options] callbackId:self->callbackId];
             }
         });
     }];

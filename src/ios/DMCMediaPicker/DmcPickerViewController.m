@@ -53,7 +53,7 @@
     [self.navigationController  setToolbarHidden:NO animated:YES];
     preview = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Preview",nil) style:UIBarButtonItemStylePlain target:self action:@selector(preview)];
     
-    annotate = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Annotate", nil) style:UIBarButtonItemStylePlain target:self action:@selector(annotate) ];
+    annotate = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Mark Up", nil) style:UIBarButtonItemStylePlain target:self action:@selector(annotate) ];
     
     [self setToolbarItems:@[preview, annotate] animated:YES];
     [self setBtnStatus];
@@ -412,11 +412,15 @@
     if([selectArray count]>0){
         self.navigationItem.rightBarButtonItem.enabled= YES;
         preview.enabled= YES;
+        annotate.enabled = YES;
         preview.title= [NSLocalizedString(@"Preview",nil)stringByAppendingString:[NSString stringWithFormat:@"(%lu)",(unsigned long)[selectArray count]]];
+        annotate.title= [NSLocalizedString(@"Mark Up",nil)stringByAppendingString:[NSString stringWithFormat:@"(%lu)",(unsigned long)[selectArray count]]];
     }else{
         self.navigationItem.rightBarButtonItem.enabled= NO;
+        annotate.title= NSLocalizedString(@"Mark Up",nil);
         preview.title= NSLocalizedString(@"Preview",nil);
         preview.enabled= NO;
+        annotate.enabled = NO;
     }
 }
     
