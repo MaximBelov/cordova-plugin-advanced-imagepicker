@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 
 import gun0912.tedimagepicker.builder.TedImagePicker;
+import gun0912.tedimagepicker.builder.SelectedResult;
+import gun0912.tedimagepicker.builder.SelectedResults;
 
 public class AdvancedImagePicker extends CordovaPlugin {
 
@@ -138,19 +140,27 @@ public class AdvancedImagePicker extends CordovaPlugin {
         }
     }
 
-    private void handleResult(Uri uri, boolean asBase64, String type, boolean asJpeg, int width, int height) {
+    private void handleResult(SelectedResult result, boolean asBase64, String type, boolean asJpeg, int width, int height) {
         List<Uri> list = new ArrayList<>();
-        list.add(uri);
-        this.handleResult(list, asBase64, type, asJpeg, width, height);
+        list.add(result.uri);
+
+        SelectedResults results = new SelectedResults(
+            list,
+            uri.annotate
+        );
+
+        this.handleResult(results, asBase64, type, asJpeg, width, height);
     }
 
-    private void handleResult(List<? extends Uri> uris, boolean asBase64, String type, boolean asJpeg, int width, int height) {
+    private void handleResult(SelectedResults results, boolean asBase64, String type, boolean asJpeg, int width, int height) {
 
         CallbackContext cb = this._callbackContext;
 
         Executors.newSingleThreadExecutor().execute(
                 () -> {
                     JSONArray result = new JSONArray();
+                    Map<String, Object> output = new HashMap<>();
+
                     PluginResult processingResult = new PluginResult(
                         PluginResult.Status.OK,
                         "processing"
@@ -158,7 +168,7 @@ public class AdvancedImagePicker extends CordovaPlugin {
                     processingResult.setKeepCallback(true);
                     cb.sendPluginResult(processingResult);
 
-                    for (Uri uri : uris) {
+                    for (Uri uri : results.uris) {
                         Map<String, Object> resultMap = new HashMap<>();
                         resultMap.put("type", type);
                         resultMap.put("isBase64", asBase64);
@@ -182,7 +192,9 @@ public class AdvancedImagePicker extends CordovaPlugin {
                         }
                         result.put(new JSONObject(resultMap));
                     }
-                    cb.success(result);
+                    output.put("list", result);
+                    output.put("annotate", results.annotate);
+                    cb.success(output);
                 }
         );
 
