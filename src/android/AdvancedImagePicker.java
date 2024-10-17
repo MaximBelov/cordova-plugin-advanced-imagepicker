@@ -142,11 +142,11 @@ public class AdvancedImagePicker extends CordovaPlugin {
 
     private void handleResult(SelectedResult result, boolean asBase64, String type, boolean asJpeg, int width, int height) {
         List<Uri> list = new ArrayList<>();
-        list.add(result.uri);
+        list.add(result.getUri());
 
         SelectedResults results = new SelectedResults(
             list,
-            uri.annotate
+            result.getAnnotate()
         );
 
         this.handleResult(results, asBase64, type, asJpeg, width, height);
@@ -159,7 +159,7 @@ public class AdvancedImagePicker extends CordovaPlugin {
         Executors.newSingleThreadExecutor().execute(
                 () -> {
                     JSONArray result = new JSONArray();
-                    Map<String, Object> output = new HashMap<>();
+                    JSONObject output = new JSONObject();
 
                     PluginResult processingResult = new PluginResult(
                         PluginResult.Status.OK,
@@ -168,7 +168,7 @@ public class AdvancedImagePicker extends CordovaPlugin {
                     processingResult.setKeepCallback(true);
                     cb.sendPluginResult(processingResult);
 
-                    for (Uri uri : results.uris) {
+                    for (Uri uri : results.getUris()) {
                         Map<String, Object> resultMap = new HashMap<>();
                         resultMap.put("type", type);
                         resultMap.put("isBase64", asBase64);
@@ -192,9 +192,13 @@ public class AdvancedImagePicker extends CordovaPlugin {
                         }
                         result.put(new JSONObject(resultMap));
                     }
-                    output.put("list", result);
-                    output.put("annotate", results.annotate);
-                    cb.success(output);
+                    try {
+                        output.put("list", result);
+                        output.put("annotate", results.getAnnotate());
+                        cb.success(output);
+                    } catch(JSONException exception) {
+                        returnError(AdvancedImagePickerErrorCodes.UnknownError);
+                    }
                 }
         );
 
